@@ -1,0 +1,196 @@
+<html>
+
+<head>
+    <title>Staking Dapp</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="js/election.js"></script>
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"
+        type="application/javascript"></script>
+    <!-- Minified -->
+    
+    <meta name="description" content="Staking Dapp">
+    <meta name="keywords" content="Staking Dapp">
+
+    <!-- Mobile viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/fontawesome.min.css"
+        integrity="sha512-xX2rYBFJSj86W54Fyv1de80DWBq7zYLn2z0I9bIhQG+rxIF6XVJUpdGnsNHWRa6AvP89vtFupEPDP8eZAtu9qA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- CSS-->
+    <!-- Google web fonts. You can get your own bundle at http://www.google.com/fonts. Don't forget to update the CSS accordingly!-->
+    <!-- <link href='http://fonts.googleapis.com/css?family=Droid+Serif|Ubuntu' rel='stylesheet' type='text/css'> -->
+
+    <!-- <link rel="stylesheet" href="css/normalize.css"> -->
+    <!-- <link rel="stylesheet" href="js/flexslider/flexslider.css"> -->
+    <!-- <link rel="stylesheet" href="css/basic-style.css"> -->
+
+    <!-- end CSS-->
+
+    <!-- JS-->
+    <script src="js/libs/modernizr-2.6.2.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+
+
+</head>
+
+<body>
+
+    <div>
+        <div class="lg:flex lg:items-center lg:justify-between p-8 flex-col gap-2">
+            <div class="min-w-0 flex-1">
+                <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">A demo staking Dapp</h2>
+            </div>
+            <span class="sm:ml-3">
+                <button id="connect" type="button" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
+                    </svg>
+                    Connect Metamask Wallet!
+                </button>
+            </span>
+        </div>
+        <br />
+        <section id="content">
+            <hr />  
+
+            <div class="flex justify-between items-center p-4">
+                <div class="mt-2 flex rounded-md shadow-sm">
+                    <span class="font-semibold text-white bg-indigo-600 inline-flex items-center rounded-l-md border border-r-0 border-gray-300 px-3 text-gray-500 sm:text-sm">Approve the amount first!</span>
+                    <input type="text" id="approve_value" class="block w-full flex-1 rounded-none rounded-r-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Enter Amount">
+                  </div>
+                <button id="approve" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                   Approve away!
+                </button>
+            </div>
+        
+            <hr />  
+
+            <div class="flex justify-between items-center p-4">
+                <div class="mt-2 flex rounded-md shadow-sm">
+                    <span class="font-semibold text-white bg-indigo-600 inline-flex items-center rounded-l-md border border-r-0 border-gray-300 px-3 text-gray-500 sm:text-sm">Stake some GT coin!</span>
+                    <input type="text" id="stake_value" class="block w-full flex-1 rounded-none rounded-r-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Enter Amount">
+                </div>
+                <hr />
+                Status : <div id="stake_status"></div>
+                <button id="stake" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    Stake away!
+                </button>
+            </div>
+        
+            <hr />
+
+            <div class="flex justify-between items-center p-4">
+                <div class="mt-2 flex rounded-md shadow-sm">
+                    <span class="font-semibold text-white bg-indigo-600 inline-flex items-center rounded-l-md border border-r-0 border-gray-300 px-3 text-gray-500 sm:text-sm">Withdraw your GT coins</span>
+                    <input type="text" id="withdraw_value" class="block w-full flex-1 rounded-none rounded-r-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Enter Amount">
+                  </div>
+                  <hr />
+                  Status : <div id="withdraw_status"></div>
+                <button id="withdraw" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    Withdraw
+                </button>
+            </div>
+
+            <hr />
+
+            <div class="flex justify-between items-center p-4">
+                <div><h3>Claim Interest</h3></div>
+                <hr />
+                <hr />
+                Status: <div id="claim_reward_status"></div>
+                <button id="claim_reward" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    Claim
+                </button>
+            </div>
+
+            <hr />  
+
+            <div class="flex justify-between items-center p-4">
+                <div><h3>Check current interest accrued!</h3></div>
+                <hr />
+                Current interest : <div id="claimable_status"></div>
+                <button id="claimable" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    Check
+                </button>
+            </div>
+
+            <hr />
+            
+            <div class="flex justify-between items-center p-4">
+                <div><h3>Total interest earned till now</h3></div>
+                <hr />
+                Interest earned: <div id="total_reward_earned_status"></div>
+                <button id="total_reward_earned" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    Check
+                </button>
+            </div>
+
+            <hr />
+            
+            <div class="flex justify-between items-center p-4">
+                <div><h3>Check current stake</h3></div>
+                <hr />
+                Current stake : <div id="get_staked_status"></div>
+                <button id="get_staked" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    Check
+                </button>
+            </div>
+
+            <!-- <h3>Add Voter</h3>
+            <input id="voter_wallet" placeholder="Voter wallet Address"><br />
+            <button id="add_voter">Add Voter</button><br /><br />
+
+            <hr />
+            
+            
+            <h3>Get Candidate List </h3>
+            Candidates: <div id="candidates"></div>
+            <div id="candidate_buttons"></div>
+            <button id="get_list">get list</button><br /><br />
+            <hr />
+            <h3>Start Election</h3>
+           
+            <button id="start">start</button>
+            <br /><br />
+
+            <hr />
+            <h3>Vote</h3>
+            <input id="candidate_name_to_vote" placeholder="candidate name"><br />
+            <div id="error"></div> -->
+            <!--<button id="vote">vote</button><br /><br />-->
+
+
+            <!-- <hr />
+            <h3>Get current leader</h3>
+            Leader: <div id="leader"></div>
+            <button id="get_leader">get leader</button><br /><br />
+            <hr />
+            <h3>end Election</h3>
+           
+            <button id="end">end</button>
+            <br /><br />
+            <hr />
+            <h3>Get Winner</h3>
+            Winner: <div id="winner"></div>
+            <button id="get_winner">Get Winner</button>
+            <hr />
+            <br /><br />
+            <hr />
+            <h3>Restart Election</h3>
+            
+            <button id="restart">Restart</button>
+
+            <button id="sign">Sign</button> -->
+
+
+            <hr />
+        </section>
+    </div>
+    <footer>
+    </footer><!-- #end footer area -->
+</body>
+
+</html>

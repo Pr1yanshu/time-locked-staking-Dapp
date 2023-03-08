@@ -3,13 +3,11 @@
 pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-
 error Staking__TransferFailed();
 error Withdraw__TransferFailed();
 error Staking__NeedsMoreThanZero();
 
-contract Staking is ReentrancyGuard {
+contract Staking {
     IERC20 public s_stakingToken;
     IERC20 public s_interestToken;
 
@@ -26,6 +24,13 @@ contract Staking is ReentrancyGuard {
 
     /** @dev Mapping from address to the interest claimable for user */
     mapping(address => uint256) public s_interestEarned;
+
+
+    event stake_event(address indexed sender, string message);
+
+    event claim_event(address indexed sender, string message);
+
+    event withdraw_event(address indexed sender, string message);
 
     modifier updateReward(address account) {
         uint256 time_elapsed_since_last_calculation = block.timestamp - s_staketime[account];
@@ -49,7 +54,8 @@ contract Staking is ReentrancyGuard {
         s_interestToken = IERC20(interestToken);
     }
 
-    function claimable(address account) public view returns (uint256) {
+    function claimable() public view returns (uint256) {
+        address account = msg.sender;
         uint256 time_elapsed_since_last_calculation = block.timestamp - s_staketime[account];
         uint256 current_balance  = s_stakeBalances[account];
         uint256 interest_accrued  = ((INTEREST_RATE) * (current_balance * time_elapsed_since_last_calculation)/100);
@@ -57,8 +63,8 @@ contract Staking is ReentrancyGuard {
         return claimable_value;
     }
 
-     function earned(address account) public view returns (uint256) {
-       return s_userInterestPaidHistory[account];
+     function earned() public view returns (uint256) {
+       return s_userInterestPaidHistory[msg.sender];
     }
 
     function stake(uint256 amount) external updateReward(msg.sender) moreThanZero(amount) {
@@ -69,6 +75,8 @@ contract Staking is ReentrancyGuard {
         bool success = s_stakingToken.transferFrom(msg.sender, address(this), amount);
         if (!success) {
             revert Staking__TransferFailed();
+        } else {
+            emit stake_event(msg.sender, "Successfully staked!");
         }
     }
 
@@ -82,6 +90,8 @@ contract Staking is ReentrancyGuard {
         bool success = s_stakingToken.transfer(msg.sender, amount);
         if (!success) {
             revert Withdraw__TransferFailed();
+        } else {
+            emit withdraw_event(msg.sender, "Successfully withdrawn!");
         }
     }
 
@@ -92,11 +102,17 @@ contract Staking is ReentrancyGuard {
         bool success = s_interestToken.transfer(msg.sender, reward);
         if (!success) {
             revert Staking__TransferFailed();
+        } else {
+            emit claim_event(msg.sender, "Successfully claimed!");
         }
     }
 
     // Getter for UI
-    function getStaked(address account) public view returns (uint256) {
+    function getStakedAccount(address account) public view returns (uint256) {
         return s_stakeBalances[account];
+    }
+
+    function getStaked() public view returns (uint256) {
+        return s_stakeBalances[msg.sender];
     }
 }
